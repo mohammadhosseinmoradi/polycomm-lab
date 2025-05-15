@@ -1,2 +1,1 @@
-A monorepo showcasing communication techniques between browser tabs, windows, processes,
-and languages.
+A monorepo showcasing awesome projects, tools, and experiments.
