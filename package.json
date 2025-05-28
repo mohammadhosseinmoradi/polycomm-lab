@@ -1,0 +1,20 @@
+{
+  "name": "xps",
+  "version": "0.1.0",
+  "description": "A monorepo showcasing awesome projects, tools, and experiments.",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohammadhosseinmoradi/xps.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mohammadhosseinmoradi/xps.git/issues"
+  },
+  "homepage": "https://github.com/mohammadhosseinmoradi/xps.git#readme",
+  "devDependencies": {
+    "prettier": "^3.5.3"
+  }
+}
