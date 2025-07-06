@@ -25,11 +25,11 @@ const FILE_PATH: &str = "tasks.json";
 #[command(about = "A simple CLI todo app")]
 struct Cli {
     #[command(subcommand)]
-    command: Commands,
+    command: Command,
 }
 
 #[derive(Subcommand)]
-enum Commands {
+enum Command {
     Add { description: String },
     List,
     Done { id: usize },
@@ -40,7 +40,7 @@ fn main() {
     let mut tasks = load_tasks();
 
     match cli.command {
-        Commands::Add { description } => {
+        Command::Add { description } => {
             let task = Task {
                 id: tasks.len(),
                 description,
@@ -50,7 +50,7 @@ fn main() {
             save_tasks(&tasks);
             println!("Task added");
         }
-        Commands::List => {
+        Command::List => {
             for task in tasks {
                 println!(
                     "{}. [{}] {}",
@@ -63,7 +63,7 @@ fn main() {
                 )
             }
         }
-        Commands::Done { id } => {
+        Command::Done { id } => {
             if let Some(task) = tasks.iter_mut().find(|task| task.id == id) {
                 task.status = Status::Done;
                 save_tasks(&tasks);
