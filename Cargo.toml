@@ -2,5 +2,7 @@
 resolver = "3"
 members = [
     "crates/simple-wasm-binding",
-    "crates/todo-cli"
+    "crates/todo-cli",
+    "crates/tcp-echo-server-client/client",
+    "crates/tcp-echo-server-client/server",
 ]
