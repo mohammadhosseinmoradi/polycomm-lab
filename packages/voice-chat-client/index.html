@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Voice Chat</title>
+</head>
+<body>
+<h1>Voice Chat Client</h1>
+
+<button id="join">Join Voice Chat</button>
+<button id="muteMic" disabled>Mute Mic</button>
+<button id="muteAudio" disabled>Mute Audio</button>
+
+<script>
+    let isMicMuted = false;
+    let isAudioMuted = false;
+    let socket;
+    let processor;
+
+    document.getElementById("join").onclick = async () => {
+        socket = new WebSocket("ws://localhost:8080");
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const sampleRate = audioContext.sampleRate;
+
+        socket.binaryType = "arraybuffer";
+
+        socket.onmessage = (event) => {
+            if (isAudioMuted) return;
+
+            const int16Array = new Int16Array(event.data);
+            const float32Array = new Float32Array(int16Array.length);
+            for (let i = 0; i < int16Array.length; i++) {
+                float32Array[i] = int16Array[i] / 32768;
+            }
+
+            const buffer = audioContext.createBuffer(1, float32Array.length, sampleRate);
+            buffer.getChannelData(0).set(float32Array);
+            const source = audioContext.createBufferSource();
+            source.buffer = buffer;
+            source.connect(audioContext.destination);
+            source.start();
+        };
+
+        const stream = await navigator.mediaDevices.getUserMedia({audio: true});
+        const source = audioContext.createMediaStreamSource(stream);
+        processor = audioContext.createScriptProcessor(2048, 1, 1);
+
+        source.connect(processor);
+        processor.connect(audioContext.destination);
+
+        processor.onaudioprocess = (e) => {
+            if (isMicMuted || socket.readyState !== WebSocket.OPEN) return;
+
+            const input = e.inputBuffer.getChannelData(0);
+            const buffer = new ArrayBuffer(input.length * 2);
+            const view = new DataView(buffer);
+            for (let i = 0; i < input.length; i++) {
+                let s = Math.max(-1, Math.min(1, input[i]));
+                view.setInt16(i * 2, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+            }
+            socket.send(buffer);
+        };
+
+        document.getElementById("muteMic").disabled = false;
+        document.getElementById("muteAudio").disabled = false;
+    };
+
+    document.getElementById("muteMic").onclick = () => {
+        isMicMuted = !isMicMuted;
+        document.getElementById("muteMic").textContent = isMicMuted ? "Unmute Mic" : "Mute Mic";
+    };
+
+    document.getElementById("muteAudio").onclick = () => {
+        isAudioMuted = !isAudioMuted;
+        document.getElementById("muteAudio").textContent = isAudioMuted ? "Unmute Audio" : "Mute Audio";
+    };
+</script>
+</body>
+</html>
