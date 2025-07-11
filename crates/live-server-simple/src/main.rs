@@ -48,7 +48,7 @@ async fn handle_connection(
                     }
                 }
                 Ok(frame) = rx.recv(), if !is_broadcaster => {
-                    if write.send(tokio_tungstenite::tungstenite::Message::Binary(frame.into())).await.is_err() {
+                    if write.send(frame.into()).await.is_err() {
                         break;
                     }
                 }
