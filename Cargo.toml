@@ -5,6 +5,5 @@ members = [
     "crates/todo-cli",
     "crates/tcp-echo-server-client/client",
     "crates/tcp-echo-server-client/server",
-    "crates/live-server-simple",
     "crates/voice-chat-server",
 ]
