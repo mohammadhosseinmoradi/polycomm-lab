@@ -2,7 +2,9 @@
   "name": "xps",
   "version": "0.1.0",
   "description": "A monorepo showcasing awesome projects and experiments.",
-  "scripts": {},
+  "scripts": {
+    "format": "prettier --write \"src/**/*.+(ts|tsx|js|jsx)\""
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mohammadhosseinmoradi/xps.git"
